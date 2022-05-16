@@ -31,10 +31,6 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("%w", errorEmptyInput)
 	}
 
-	if len(strings.TrimSpace(input)) < 3 {
-		return "", errorNotTwoOperands
-	}
-
 	el := strings.Split(input, "")
 	var el2 []string
 	for i := 0; i < len(el); i++ {
