@@ -2,6 +2,9 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -21,7 +24,44 @@ var (
 // with fmt.Errorf function
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
+func parseArgs(c []string) (float64, float64, error) {
+	num1, err := strconv.ParseFloat(c[0], 64)
+	if err != nil {
+		return 0.0, 0.0, err
+	}
+	num2, err := strconv.ParseFloat(c[2], 64)
+	if err != nil {
+		return 0.0, 0.0, err
+	}
+	return num1, num2, nil
+}
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	if len(input) == 0 {
+		return "", errorEmptyInput
+	}
+	if len(strings.TrimSpace(input)) < 3 {
+		return "", errorNotTwoOperands
+	}
+
+	result := 0.0
+	for _, item := range input {
+		c := strings.Split(string(item), " ")
+		num1, num2, err := parseArgs(c)
+		if err != nil {
+			return "", err
+		}
+
+		switch c[1] {
+		case "*":
+			result = num1 * num2
+		case "/":
+			result = num1 / num2
+		case "+":
+			result = num1 + num2
+		case "-":
+			result = num1 - num2
+		}
+	}
+	return fmt.Sprintf("%f", result), nil
 }
