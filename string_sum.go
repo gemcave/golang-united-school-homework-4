@@ -2,6 +2,8 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -24,12 +26,54 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	if len(input) == 0 {
-		return "", errorEmptyInput
+	input = strings.TrimSpace(input)
+	if input == "" {
+		return "", fmt.Errorf("%w", errorEmptyInput)
 	}
+
 	if len(strings.TrimSpace(input)) < 3 {
 		return "", errorNotTwoOperands
 	}
 
-	return "", nil
+	el := strings.Split(input, "")
+	var el2 []string
+	for i := 0; i < len(el); i++ {
+		if el[i] == " " {
+			continue
+		}
+		if el[i] == "+" {
+			el[i] = "/"
+			el2 = append(el2, el[i])
+			continue
+		}
+		if el[i] == "-" {
+			el[i] = "/-"
+		}
+		el2 = append(el2, el[i])
+	}
+
+	for i := 0; i < len(el); i++ {
+		if el[i] == "" {
+			copy(el[i:], el[i+1:])
+			el[len(el)-1] = ""
+			el = el[:len(el)-1]
+		}
+		el2 = append(el2, el[i])
+	}
+
+	if len(el2) > 2 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	}
+
+	a, err := strconv.Atoi(el2[0])
+	if err != nil {
+		return "", fmt.Errorf("bad %w", err)
+	}
+
+	b, err := strconv.Atoi(el2[1])
+	if err != nil {
+		return "", fmt.Errorf("bad %w", err)
+	}
+	output = fmt.Sprint(strconv.Itoa(a + b))
+	return output, nil
 }
